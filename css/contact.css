@@ -51,25 +51,22 @@
 }
 
 .form-group {
-    margin-bottom: 2rem;
-    position: relative;
+    margin-bottom: 1.5rem;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.5rem;
     color: var(--text-primary);
-    font-size: 1rem;
     font-weight: 500;
-    transition: all 0.3s ease;
 }
 
 .form-control {
     width: 100%;
-    padding: 1rem 1.5rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-secondary);
     color: var(--text-primary);
     font-size: 1rem;
     transition: all 0.3s ease;
@@ -77,18 +74,38 @@
 
 .form-control:focus {
     outline: none;
-    border-color: var(--accent-primary);
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 0 0 4px rgba(0, 255, 187, 0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.1);
 }
 
 .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-secondary);
 }
 
-textarea.form-control {
-    min-height: 150px;
-    resize: vertical;
+.form-note {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+/* Invalid input styling */
+.form-control:invalid:not(:placeholder-shown) {
+    border-color: #dc3545;
+}
+
+.form-control:invalid:not(:placeholder-shown):focus {
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1);
+}
+
+/* Phone number specific styling */
+input[type="tel"].form-control {
+    letter-spacing: 0.5px;
+}
+
+/* Subject field specific styling */
+input[type="text"]#subject {
+    font-weight: 500;
 }
 
 .submit-btn {
