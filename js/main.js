@@ -552,9 +552,12 @@ if (form) {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const submitButton = form.querySelector('button[type="submit"]');
+        const submitButton = form.querySelector('.submit-btn');
         const originalText = submitButton.innerHTML;
-        submitButton.innerHTML = 'Sending...';
+        
+        // Show sending state
+        submitButton.innerHTML = '<span>Sending...</span> <i class="fas fa-spinner fa-spin"></i>';
+        submitButton.disabled = true;
         
         fetch(form.action, {
             method: 'POST',
@@ -563,19 +566,57 @@ if (form) {
                 'Accept': 'application/json'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
         .then(data => {
-            submitButton.innerHTML = 'Message Sent!';
+            // Show success message
+            submitButton.innerHTML = '<span>Message Sent!</span> <i class="fas fa-check"></i>';
+            submitButton.style.backgroundColor = '#28a745';
             form.reset();
+            
+            // Create and show a success alert
+            const alert = document.createElement('div');
+            alert.className = 'form-alert success';
+            alert.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                Message sent successfully! We'll get back to you soon.
+            `;
+            form.insertBefore(alert, form.firstChild);
+            
+            // Reset button after 3 seconds
             setTimeout(() => {
                 submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+                submitButton.style.backgroundColor = '';
+                if (alert) alert.remove();
             }, 3000);
         })
         .catch(error => {
-            submitButton.innerHTML = 'Error!';
             console.error('Error:', error);
+            
+            // Show error message
+            submitButton.innerHTML = '<span>Error!</span> <i class="fas fa-exclamation-circle"></i>';
+            submitButton.style.backgroundColor = '#dc3545';
+            
+            // Create and show an error alert
+            const alert = document.createElement('div');
+            alert.className = 'form-alert error';
+            alert.innerHTML = `
+                <i class="fas fa-exclamation-circle"></i>
+                Oops! Something went wrong. Please try again.
+            `;
+            form.insertBefore(alert, form.firstChild);
+            
+            // Reset button after 3 seconds
             setTimeout(() => {
                 submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+                submitButton.style.backgroundColor = '';
+                if (alert) alert.remove();
             }, 3000);
         });
     });
