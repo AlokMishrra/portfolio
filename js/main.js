@@ -547,28 +547,37 @@ window.addEventListener('mousemove', (e) => {
 });
 
 // Contact Form Handling
-const contactForm = document.querySelector('.contact-form');
-const submitBtn = document.querySelector('.submit-btn');
-
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
+const form = document.getElementById('contact-form');
+if (form) {
+    form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Add sending animation
-        submitBtn.classList.add('sending');
-        submitBtn.innerHTML = '<span>Sending...</span> <i class="fas fa-spinner fa-spin"></i>';
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+        submitButton.innerHTML = 'Sending...';
         
-        // Simulate form submission (replace with actual form submission)
-        setTimeout(() => {
-            submitBtn.classList.remove('sending');
-            submitBtn.innerHTML = '<span>Message Sent!</span> <i class="fas fa-check"></i>';
-            
-            // Reset form
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            submitButton.innerHTML = 'Message Sent!';
+            form.reset();
             setTimeout(() => {
-                contactForm.reset();
-                submitBtn.innerHTML = '<span>Send Message</span> <i class="fas fa-paper-plane"></i>';
-            }, 2000);
-        }, 2000);
+                submitButton.innerHTML = originalText;
+            }, 3000);
+        })
+        .catch(error => {
+            submitButton.innerHTML = 'Error!';
+            console.error('Error:', error);
+            setTimeout(() => {
+                submitButton.innerHTML = originalText;
+            }, 3000);
+        });
     });
 }
 
